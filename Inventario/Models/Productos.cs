@@ -10,5 +10,7 @@ namespace Inventario.Models
         public virtual int FK_IdCategoria { get; set; }
         public string P_Descripcion { get; set; }
         public decimal P_Precio { get; set; }
+        public string P_Codigo { get; set; }
+        public string P_CantidadPorUnidad { get; set; }
     }
 }

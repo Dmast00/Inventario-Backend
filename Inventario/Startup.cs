@@ -35,10 +35,10 @@ namespace Inventario
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
+                    builder => builder
+                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-
                     );
             });
             services.AddSignalR();
@@ -57,6 +57,7 @@ namespace Inventario
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors("CorsPolicy");
             //app.UseEndpoints(endpoints =>
             //{
             //    endpoints.MapHub<BroadcastHub>("/tt");
