@@ -12,5 +12,6 @@ namespace Inventario.Models
         public decimal P_Precio { get; set; }
         public string P_Codigo { get; set; }
         public string P_CantidadPorUnidad { get; set; }
+        public decimal P_CostoMayoreo { get; set; }
     }
 }
