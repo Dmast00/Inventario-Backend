@@ -76,13 +76,40 @@ namespace Inventario.Controllers
         // POST: api/Inventarios
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
+        [HttpPut]
         public async Task<ActionResult<Inventarios>> PostInventarios(Inventarios inventarios)
         {
-            _context.Inventarios.Add(inventarios);
-            await _context.SaveChangesAsync();
+            if (inventarios != null)
+            {
+                var productId = await _context.Inventarios.FirstOrDefaultAsync(x => x.FK_IdProducto == inventarios.FK_IdProducto);
+                if(productId != null)
+                {
 
-            return CreatedAtAction("GetInventarios", new { id = inventarios.IdInventario }, inventarios);
+                    productId.P_Existencia += inventarios.P_Existencia;
+                    productId.P_InventarioMinimo = inventarios.P_InventarioMinimo;
+                    
+                    _context.Entry(productId).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return Ok();
+
+                }
+                else
+                {
+                    Inventarios AddInventario = new Inventarios()
+                    {
+
+                        IdInventario = inventarios.IdInventario,
+                        FK_IdProducto = inventarios.FK_IdProducto,
+                        P_Existencia = +inventarios.P_Existencia,
+                        P_InventarioMinimo = inventarios.P_InventarioMinimo,
+                    };
+                    _context.Add(AddInventario);
+                    await _context.SaveChangesAsync();
+                    return CreatedAtAction("GetInventarios", new { id = inventarios.IdInventario }, inventarios);
+                }
+
+            }
+            else { return NoContent(); }
         }
 
         // DELETE: api/Inventarios/5
