@@ -14,6 +14,7 @@ namespace Inventario.Controllers
     public class InventariosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+       
 
         public InventariosController(ApplicationDbContext context)
         {
@@ -47,6 +48,7 @@ namespace Inventario.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutInventarios(int id, Inventarios inventarios)
         {
+            
             if (id != inventarios.IdInventario)
             {
                 return BadRequest();
@@ -79,6 +81,7 @@ namespace Inventario.Controllers
         [HttpPut]
         public async Task<ActionResult<Inventarios>> PostInventarios(Inventarios inventarios)
         {
+            WriteTxt write = new WriteTxt();
             if (inventarios != null)
             {
                 var productId = await _context.Inventarios.FirstOrDefaultAsync(x => x.FK_IdProducto == inventarios.FK_IdProducto);
@@ -87,11 +90,14 @@ namespace Inventario.Controllers
 
                     productId.P_Existencia += inventarios.P_Existencia;
                     productId.P_InventarioMinimo = inventarios.P_InventarioMinimo;
+                    productId.FechaModificacion = DateTime.Now;
                     
                     _context.Entry(productId).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
+                    write.GenerarTxt();
+                    write.EscribirTxt($"Se modifico el producto con id {productId.FK_IdProducto} del inventario, se agregaron {inventarios.P_Existencia}s productos.");
                     return Ok();
-
+                    
                 }
                 else
                 {
@@ -102,9 +108,12 @@ namespace Inventario.Controllers
                         FK_IdProducto = inventarios.FK_IdProducto,
                         P_Existencia = +inventarios.P_Existencia,
                         P_InventarioMinimo = inventarios.P_InventarioMinimo,
+                        FechaModificacion= DateTime.Now 
                     };
                     _context.Add(AddInventario);
                     await _context.SaveChangesAsync();
+                    write.GenerarTxt();
+                    write.EscribirTxt("Se agrego producto a inventario");
                     return CreatedAtAction("GetInventarios", new { id = inventarios.IdInventario }, inventarios);
                 }
 

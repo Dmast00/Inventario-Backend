@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Inventario.Models
 {
@@ -9,6 +10,7 @@ namespace Inventario.Models
         public virtual int FK_IdProducto { get; set; }
         public int P_Existencia { get; set; }
         public int P_InventarioMinimo { get; set; }
+        public  DateTime FechaModificacion { get; set; }
     }
 }
 
