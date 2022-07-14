@@ -15,10 +15,11 @@ namespace Inventario.Models
         {
             string fileName = "Prueba";
             string route = $@"C:\{fileName}.txt";
+            string date = DateTime.Now.ToString();
 
             using (StreamWriter sw = new StreamWriter(route, true))
             {
-                sw.WriteLine(text);
+                sw.WriteLine(date+" || "+text);
                 sw.Close(); 
             }
         }
